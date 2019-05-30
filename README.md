@@ -53,7 +53,7 @@ It is a system that allows creating of new applications. Each application is ind
 * **Success Response:**
 
   * **Code:** 200 <br />
-    **Content:** `{ token : 'asd2goy79aksmpw }`
+    **Content:** `{ token : 'asd2goy79aksmpw' }`
 
 * **Sample Call:**
 
