@@ -1,0 +1,287 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Instabug challenge
+  description: API document
+  contact:
+    name: Mohamed Medhat Ashour
+host: 'localhost:3000'
+basePath: /
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /api/v1/chat_applications:
+    post:
+      summary: Create a chat application
+      description: Create a chat application and returns it's token
+      tags:
+        - ChatApplications
+      parameters:
+        - name: Name
+          in: path
+          description: Name of the application
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Returns it's token
+        '422':
+          description: Unprocessable entity
+  '/api/v1/chat_applications/{token}':
+    put:
+      summary: Updates application
+      description: Updates application found by token
+      tags:
+        - ChatApplications
+      parameters:
+        - name: token
+          in: path
+          description: Application token
+          required: true
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/chat_application'
+          required: false
+      responses:
+        '200':
+          description: Chat application successfully updated
+        '404':
+          description: Not found
+    get:
+      summary: Get application
+      description: Get application by token
+      tags:
+        - ChatApplications
+      parameters:
+        - name: token
+          in: path
+          description: Application token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Chat application successfully retrieved
+        '404':
+          description: Not found
+  '/api/v1/chat_applications/{chat_application_token}/chats/{chat_number}':
+    post:
+      summary: Create a message
+      description: Create a message to the corresponding chat
+      tags:
+        - Messages
+      parameters:
+        - name: Body
+          in: path
+          description: Body of the message
+          required: true
+          type: string
+        - name: chat_application_token
+          in: path
+          description: Application token
+          required: true
+          type: string
+        - name: chat_number
+          in: path
+          description: Chat number
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Message successfully created
+        '404':
+          description: Chat not found
+        '422':
+          description: Unprocessable entity
+  '/api/v1/chat_applications/{chat_application_token}/chats/{chat_number}/messages/{number}':
+    put:
+      summary: Updates the message
+      description: 'Updates the message found by chat application token, chat number and its number'
+      tags:
+        - Messages
+      parameters:
+        - name: chat_application_token
+          in: path
+          description: Application token
+          required: true
+          type: string
+        - name: chat_number
+          in: path
+          description: Chat number
+          required: true
+          type: integer
+        - name: number
+          in: path
+          description: Message number
+          required: true
+          type: integer
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/message'
+          required: true
+      responses:
+        '200':
+          description: Message successfully updated
+        '404':
+          description: Not found
+    get:
+      summary: Gets the message
+      description: 'Gets the message found by chat application token, chat number and its number'
+      tags:
+        - Messages
+      parameters:
+        - name: chat_application_token
+          in: path
+          description: Application token
+          required: true
+          type: string
+        - name: chat_number
+          in: path
+          description: Chat number
+          required: true
+          type: integer
+        - name: number
+          in: path
+          description: Message number
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Message successfully retrieved
+        '404':
+          description: Not found
+  '/api/v1/chat_applications/{chat_application_token}/chats/{chat_number}/messages':
+    get:
+      summary: Gets all messages or by query
+      description: Gets all messages that matches the query body and returns all messages if query is not entered
+      tags:
+        - Messages
+      parameters:
+        - name: chat_application_token
+          in: path
+          description: Application token
+          required: true
+          type: string
+        - name: chat_number
+          in: path
+          description: Chat number
+          required: true
+          type: integer
+        - name: query
+          in: query
+          type: string
+      responses:
+        '200':
+          description: Message(s) successfully retrieved
+        '404':
+          description: Not found
+  '/api/v1/chat_applications/{chat_application_token}/chats':
+    post:
+      summary: Create a chat
+      description: Create a chat to the corresponding chat application
+      tags:
+        - Chats
+      parameters:
+        - name: chat_application_token
+          in: path
+          description: Application token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Chat successfully created
+        '404':
+          description: ChatApplication not found
+    get:
+      summary: Get all chats
+      description: Get all chats for an application found by token
+      tags:
+        - Chats
+      parameters:
+        - name: chat_application_token
+          in: path
+          description: Application token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Chats successfully retrieved
+        '404':
+          description: ChatApplication not found
+  '/api/v1/chat_applications/{chat_application_token}/chats/{number}':
+    get:
+      summary: Get a chat
+      description: Get a chat by application token and its number
+      tags:
+        - Chats
+      parameters:
+        - name: chat_application_token
+          in: path
+          description: Application token
+          required: true
+          type: string
+        - name: number
+          in: path
+          description: Chat number
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Chat successfully retrieved
+        '404':
+          description: ChatApplication not found
+    put:
+      summary: Update chat
+      description: Update chat found by its number and application token
+      tags:
+        - Chats
+      parameters:
+        - name: chat_application_token
+          in: path
+          description: Application token
+          required: true
+          type: string
+        - name: number
+          in: path
+          description: number
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Chats successfully retrieved
+        '404':
+          description: ChatApplication not found
+definitions:
+  chat_application:
+    properties:
+      name:
+        type: string
+      token:
+        type: string
+      chats_count:
+        type: integer
+  message:
+    properties:
+      body:
+        type: string
+      number:
+        type: integer
+        minimum: 1
+      chat_application_token:
+        type: string
+      chat_number:
+        type: integer
+        minimum: 1
+  chat:
+    properties:
+      number:
+        type: integer
+        minimum: 1
+      chat_application_token:
+        type: string
+      messages_count:
+        type: integer
